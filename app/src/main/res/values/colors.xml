@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="system_red">#ff0000</color>
+    <color name="system_yellow">#EED202</color>
+    <color name="system_green">#008000</color>
+    <color name="system_transparent"> #00000000</color>
+    <color name="button_gray">#808080</color>
+
 </resources>
