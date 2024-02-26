@@ -178,5 +178,15 @@
         app:layout_constraintStart_toEndOf="@+id/buttonCalendar"
         app:layout_constraintTop_toBottomOf="@+id/editInput" />
 
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        tools:layout_editor_absoluteX="59dp"
+        tools:layout_editor_absoluteY="150dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
