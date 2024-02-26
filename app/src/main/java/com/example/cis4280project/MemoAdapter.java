@@ -27,7 +27,7 @@ public class MemoAdapter extends RecyclerView.Adapter {
         public TextView textSubject;
         public TextView textDate;
         public TextView textLevel;
-        public Button deleteBution;
+        public Button deleteButton;
 
 
         public memoViewHolder(@NonNull View itemView) {
@@ -35,7 +35,7 @@ public class MemoAdapter extends RecyclerView.Adapter {
             textSubject = itemView.findViewById(R.id.textSubject);
             textDate = itemView.findViewById(R.id.textDate);
             textLevel = itemView.findViewById(R.id.textLevel);
-            deleteBution = itemView.findViewById(R.id.buttonDelete);
+            deleteButton = itemView.findViewById(R.id.buttonDelete);
             itemView.setTag(this);
             itemView.setOnClickListener(mOnItemClickerListener);
         }
@@ -49,7 +49,7 @@ public class MemoAdapter extends RecyclerView.Adapter {
             return textLevel;
         }
         public Button getDeleteBution() {
-            return deleteBution;
+            return deleteButton;
         }
 
     }

@@ -39,6 +39,21 @@ public class MemoList extends AppCompatActivity {
         setContentView(R.layout.memo_list);
         initAddMemo();
         initDelSwitch();
+
+        MemoDataSource ds = new MemoDataSource(this);
+        try {
+            ds.open();
+            memos = ds.getMemos();
+            ds.close();
+            memoList = findViewById(R.id.rvMemos);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            memoAdapter = new MemoAdapter(memos, MemoList.this);
+            memoAdapter.setOnItemClickerListener(onItemClickListener);
+            memoList.setAdapter(memoAdapter);
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "Error loading memos.", Toast.LENGTH_LONG).show();
+        }
     }
     //Add a new memo
     private void initAddMemo() {
