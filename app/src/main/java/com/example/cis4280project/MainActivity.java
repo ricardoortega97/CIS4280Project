@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //chhange to the settings activity
-                Intent intent = new Intent(MainActivity.this, null);
+                Intent intent = new Intent(MainActivity.this, MemoSettings.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -83,4 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 }
