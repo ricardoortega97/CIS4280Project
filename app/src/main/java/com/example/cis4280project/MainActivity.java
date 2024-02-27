@@ -4,16 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
-import java.text.DateFormat;
+import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DatePickerDialog.SaveDateListener{
 
     private Memo currentMemo;
 
@@ -31,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         else {
             currentMemo = new Memo();
         }
+        initSaveButton();
+        initTextChangedEvents();
+        initToggleButton();
     }
 
     //method to go to the next activity (memoList)
@@ -83,6 +91,127 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void setForEditing(boolean enabled) {
+
+        EditText editSubject = findViewById(R.id.editSubject);
+        EditText editInput = findViewById(R.id.editInput);
+        Button buttonCalendar = findViewById(R.id.buttonCalendar);
+        RadioButton rbLow = findViewById(R.id.rbLow);
+        RadioButton rbMedium = findViewById(R.id.rbMedium);
+        RadioButton rbHigh = findViewById(R.id.rbHigh);
+        Button buttonSave = findViewById(R.id.buttonSave);
+
+        editSubject.setEnabled(enabled);
+        editInput.setEnabled(enabled);
+        buttonCalendar.setEnabled(enabled);
+        rbLow.setEnabled(enabled);
+        rbMedium.setEnabled(enabled);
+        rbHigh.setEnabled(enabled);
+        buttonSave.setEnabled(enabled);
+
+    }
+
+
+
+
+
+    private void initToggleButton() {
+        final ToggleButton editToggle = (ToggleButton) findViewById(R.id.toggleButtonEdit);
+        editToggle.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                setForEditing(editToggle.isChecked());
+            }
+        });
+    }
+
+    private void initSaveButton() {
+        Button saveButton = findViewById(R.id.buttonSave);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                hideKeyboard();
+                boolean wasSuccessful;
+                MemoDataSource ds = new MemoDataSource(MainActivity.this);
+                try {
+                    ds.open();
+
+                    if (currentMemo.getMemoID() == -1) {
+                        wasSuccessful = ds.insertMemo(currentMemo);
+                        if (wasSuccessful) {
+                            int newId = ds.getLastMemoID();
+                            currentMemo.setMemoID(newId);
+                        }
+                    } else {
+                        wasSuccessful = ds.updateMemo(currentMemo);
+                    }
+                    ds.close();
+
+                } catch (Exception e) {
+                    wasSuccessful = false;
+                }
+                if (wasSuccessful) {
+                    ToggleButton editToggle = findViewById(R.id.toggleButtonEdit);
+                    editToggle.toggle();
+                    setForEditing(false);
+                }
+            }
+        });
+    }
+
+    private void initTextChangedEvents() {
+
+        final EditText etMemoSubject = findViewById(R.id.editSubject);
+        etMemoSubject.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                currentMemo.setSubject(etMemoSubject.getText().toString());
+
+            }
+        });
+
+        final EditText etMemoInput = findViewById(R.id.editInput);
+        etMemoInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                currentMemo.setMemoText(etMemoInput.getText().toString());
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void didFinishDatePickerDialog(Calendar selectedTime) {
+        TextView date = findViewById(R.id.textDate);
+        date.setText(DateFormat.format("MM/dd/yyyy", selectedTime));
+        currentMemo.setDate(selectedTime);
+    }
+
 
 
 }
