@@ -76,10 +76,10 @@ public class MemoDataSource {
     }
 
     //grabbing the database to display in a Array list
-    public ArrayList<Memo> getMemos(){
+    public ArrayList<Memo> getMemos(String sortField, String sortOrder){
         ArrayList<Memo> memos = new ArrayList<Memo>();
         try {
-            String query = "Select * From memo";
+            String query = "Select * From memo Order By " + sortField + " " + sortOrder;
             Cursor cursor = database.rawQuery(query, null);
 
             Memo newMemo;

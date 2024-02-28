@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -39,11 +40,17 @@ public class MemoList extends AppCompatActivity {
         setContentView(R.layout.memo_list);
         initAddMemo();
         initDelSwitch();
+        initSettings();
+
+        String sortBy = getSharedPreferences("MemoPreferences",
+                Context.MODE_PRIVATE).getString("sortfield","subject");
+        String sortOrder = getSharedPreferences("MemoPreferences",
+                Context.MODE_PRIVATE).getString("sortorder","ASC");
 
         MemoDataSource ds = new MemoDataSource(this);
         try {
             ds.open();
-            memos = ds.getMemos();
+            memos = ds.getMemos(sortBy, sortOrder);
             ds.close();
             memoList = findViewById(R.id.rvMemos);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -54,6 +61,19 @@ public class MemoList extends AppCompatActivity {
         catch (Exception e) {
             Toast.makeText(this, "Error loading memos.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void initSettings(){
+        Button settingsButton = findViewById(R.id.buttonSettings);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //chhange to the settings activity
+                Intent intent = new Intent(MemoList.this, MemoSettings.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
     }
     //Add a new memo
     private void initAddMemo() {
@@ -86,11 +106,16 @@ public class MemoList extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        String sortBy = getSharedPreferences("MemoPreferences",
+                Context.MODE_PRIVATE).getString("sortfield","subject");
+        String sortOrder = getSharedPreferences("MemoPreferences",
+                Context.MODE_PRIVATE).getString("sortorder","ASC");
+
 
         MemoDataSource ds = new MemoDataSource(this);
         try {
             ds.open();
-            memos = ds.getMemos();
+            memos = ds.getMemos(sortBy, sortOrder);
             ds.close();
             if (memos.size() > 0) {
                 memoList = findViewById(R.id.rvMemos);

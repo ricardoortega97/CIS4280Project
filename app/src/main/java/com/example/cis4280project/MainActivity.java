@@ -1,6 +1,7 @@
 package com.example.cis4280project;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         setContentView(R.layout.activity_main);
         initMemoListButton();
         initSettings();
+        initChangeDateButton();
+        initSaveButton();
+        initTextChangedEvents();
+        initToggleButton();
         //calls the current object
         Bundle extras = getIntent().getExtras();
         if (extras != null){
@@ -36,9 +41,8 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         else {
             currentMemo = new Memo();
         }
-        initSaveButton();
-        initTextChangedEvents();
-        initToggleButton();
+        setForEditing(false);
+
     }
 
     //method to go to the next activity (memoList)
@@ -80,15 +84,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         EditText editSubject = findViewById(R.id.editSubject);
         EditText editMemo = findViewById(R.id.editInput);
         TextView textDate = findViewById(R.id.textDate);
-        //radio button saved in a database?
-        RadioGroup rgLevel = findViewById(R.id.rbLevel);
 
         editSubject.setText(currentMemo.getSubject());
         editMemo.setText(currentMemo.getMemoText());
-        //The format method must be added inorder to set this.
-       // textDate.setText(DateFormat.format("MM/dd/yy",
-               // currentMemo.getDate().getTimeInMillis()));
-
+        textDate.setText(DateFormat.format("MM/dd/yy",
+               currentMemo.getDate().getTimeInMillis()));
 
     }
 
@@ -112,7 +112,18 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     }
 
-
+    //calls a dialog Fragment calendar to set the date of the memo
+    private void initChangeDateButton(){
+        Button changeDate = findViewById(R.id.buttonCalendar);
+        changeDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                DatePickerDialog datePickerDialog = new DatePickerDialog();
+                datePickerDialog.show(fm, "DatePick");
+            }
+        });
+    }
 
 
 
@@ -133,7 +144,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
             @Override
             public void onClick(View view) {
-                hideKeyboard();
+
+                RadioGroup rgLevel = findViewById(R.id.rbLevel);
+                int selectedID = rgLevel.getCheckedRadioButtonId();
+                RadioButton rbLevel = findViewById(selectedID);
+                String selectedLevel = rbLevel.getText().toString();
+
+                // Set the "level" property in the currentMemo object
+                currentMemo.setLevel(selectedLevel);
+
+
+                // hideKeyboard();
                 boolean wasSuccessful;
                 MemoDataSource ds = new MemoDataSource(MainActivity.this);
                 try {

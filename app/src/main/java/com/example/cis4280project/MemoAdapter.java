@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MemoAdapter extends RecyclerView.Adapter {
 
@@ -73,7 +77,12 @@ public class MemoAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         memoViewHolder cvh = (memoViewHolder) holder;
         cvh.getTextSubject().setText(memoData.get(position).getSubject());
-        cvh.getTextDate().setText((CharSequence) memoData.get(position).getDate());
+
+        Calendar calendar = memoData.get(position).getDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        CharSequence formattedDate = dateFormat.format(calendar.getTime());
+        cvh.getTextDate().setText(formattedDate);
+
         cvh.getTextLevel().setText(memoData.get(position).getLevel());
 
         if (isDeleting) {
@@ -87,6 +96,7 @@ public class MemoAdapter extends RecyclerView.Adapter {
         }
         else {
             cvh.getDeleteBution().setVisibility(View.INVISIBLE);
+
         }
     }
     public void setDeleting(boolean b){

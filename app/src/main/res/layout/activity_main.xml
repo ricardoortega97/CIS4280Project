@@ -125,18 +125,26 @@
             android:id="@+id/rbLow"
             android:layout_width="106dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Low"
+            android:textColor="@color/system_green"
+            />
 
         <RadioButton
             android:id="@+id/rbMedium"
             android:layout_width="104dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Medium"
+            android:textColor="@color/system_yellow" />
 
         <RadioButton
             android:id="@+id/rbHigh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="High"
+            android:textColor="@color/system_red"
+            />
 
     </RadioGroup>
 
